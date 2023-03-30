@@ -1,7 +1,10 @@
 import requests
 
+# Set base URL to CONTENTdm website URL
+base_URL = "https://digital.utsa.edu"
+
 # Make an API request to get collection list
-collection_list_url = "https://digital.utsa.edu/digital/bl/dmwebservices/index.php?q=dmGetCollectionList/json"
+collection_list_url = base_URL + "/digital/bl/dmwebservices/index.php?q=dmGetCollectionList/json"
 collection_response = requests.get(collection_list_url)
 
 # Create an empty list to hold collection aliases
@@ -13,8 +16,6 @@ for collection in collection_response.json():
     #print(alias)
     alias_list.append(alias)
 
-print(alias_list)
-
 # Alternate method: Open a file to get the list of collection aliases, then split that list into separate lines
 # alias_list = open("alias-test.txt", "r", encoding="utf-8").readlines()
 
@@ -24,9 +25,9 @@ for line in alias_list:
     print(alias)
 
     # Make an API request for the collection
-    collection_url = "https://digital.utsa.edu/digital/bl/dmwebservices/index.php?q=dmGetCollectionFieldInfo/" + alias + "/xml"
+    collection_url = base_URL + "/digital/bl/dmwebservices/index.php?q=dmGetCollectionFieldInfo/" + alias + "/xml"
     response = requests.get(collection_url)
-    print(response.status_code)
+    print(response.status_code) # Print status code for error checking
 
     # Save the request output to file
     with open(alias + ".xml", mode="w", encoding="utf-8") as f:
