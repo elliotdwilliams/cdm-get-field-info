@@ -3,7 +3,13 @@ Queries the CONTENTdm Server API for a list of all collections in a repository,
 then downloads the field information for each collection as an XML file.
 '''
 
+import os.path
 import requests
+
+# Set directory to save files, and check it exists
+directory = "./field_data"
+if not os.path.isdir(directory):
+    os.mkdir(directory)
 
 # Set base URL to CONTENTdm website URL
 BASE_URL = "https://digital.utsa.edu"
@@ -21,6 +27,12 @@ for collection in collection_response.json():
     # print(alias)
     alias_list.append(alias)
 
+# Save collection list to directory
+file_name = os.path.join(directory, "collection_list.txt")
+s = "\n".join(alias_list)
+with open(file_name, mode="w") as f:
+    f.write(s)
+
 # Alternate method: Open a file to get the list of collection aliases, then split that list into separate lines
 # alias_list = open("alias-test.txt", "r", encoding="utf-8").readlines()
 
@@ -35,5 +47,6 @@ for line in alias_list:
     print(response.status_code)  # Print status code for error checking
 
     # Save the request output to file
-    with open(alias + ".xml", mode="w", encoding="utf-8") as f:
+    file_name = os.path.join(directory, (alias + ".xml"))
+    with open(file_name, mode="w", encoding="utf-8") as f:
         f.write(response.text)
